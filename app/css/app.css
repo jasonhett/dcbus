@@ -1,0 +1,7 @@
+.app-container,
+.map-container,
+html,
+body{
+    height: 100%;
+    width: 100%;
+}
