@@ -1,4 +1,7 @@
-define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeController', 'utilities'], function(_, L, Q, Stops, Route, Util) {
+/**
+ * Created by jasonhettmansperger on 5/25/15.
+ */
+define(["lib/lodash","lib/leaflet/leaflet", "lib/q"], function(_, L, Q) {
 		//return an object to define the "my/shirt" module.
 
 		var map,
@@ -9,7 +12,7 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeCo
 		return {
 
 			//Initialize Map
-			init: function(){
+			init: function(mainMap){
 
 				var self = this;
 
@@ -19,18 +22,17 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeCo
 				//Create layer for Basemap
 				//var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 				var basemapURL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
-				basemapLayer = self.addBasemapLayer(basemapURL, 8/*min zoom*/, 22/*max zoom*/);
-				stopLayer = Stops.addBusStopLayer(map);
+				self.addBasemapLayer(basemapURL, 8/*min zoom*/, 22/*max zoom*/);
 
+				//Create layers for stops
+				var stopLayer = Stops.addBusStopLayer(map);
 
-				//Initialize Routes
-				Route.init(map);
 
 			},
 
 			addBasemapLayer: function(url, minZoom, maxZoom){
-				map.addLayer(new L.TileLayer(url, {minZoom: minZoom, maxZoom: maxZoom}));
-				return basemapLayer;
+				basemapLayer = new L.TileLayer(url, {minZoom: minZoom, maxZoom: maxZoom});
+				map.addLayer(basemapLayer);
 			}
 
 		}
