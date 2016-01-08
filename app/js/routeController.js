@@ -123,6 +123,8 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities'], function(_, L
 					return (new L.LatLng(point.Lat, point.Lon));
 				})
 
+				debugger;
+
 				return latLngArray;
 
 			},

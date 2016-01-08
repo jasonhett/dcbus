@@ -1,11 +1,13 @@
 /**
  * Created by jasonhettmansperger on 5/25/15.
  */
-define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities'], function(_, L, Q, Util) {
+define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities', 'busController'], function(_, L, Q, Util, BusController) {
 		//return an object to define the "my/shirt" module.
 		var map;
 		var stopLayer;
 		var apiKey = 'ccfeeb81bbc54b3cbc064f3e4d5266ea';
+
+		var masterMarkerList = [];
 
 
 		var stopIcon = L.icon({
@@ -30,10 +32,23 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities'], function(_, L
 
 				//add Bus Stop Layer events
 				//map.on('zoomend', self.hideShowBusStopLayer);
-				map.on('moveend', self.addBusStops.bind(this));
+				map.on('moveend', self.updateBusStops.bind(this));
 
 				return stopLayer;
 
+			},
+
+			updateBusStops: function(){
+
+				var self = this;
+
+				self.addBusStops();
+
+				debugger;
+
+				//if route, only show stops on route
+
+				//else do normal add bus stops
 			},
 
 			addBusStops: function(){
@@ -60,6 +75,11 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities'], function(_, L
 							var data = JSON.parse(data);
 							var markerArray = [];
 							data.Stops.forEach(function(busPos){
+
+								if(_.contains(_.pluck(masterMarkerList, 'id'), busPos.StopID)){
+									return;
+								}
+
 								var cloneStop = _.cloneDeep(busPos);
 								var latlng = L.latLng(busPos.Lat, busPos.Lon);
 								var newMarker = L.marker(latlng, {icon: stopIcon});
@@ -77,17 +97,17 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'utilities'], function(_, L
 										.then(function(data){
 											var data = JSON.parse(data);
 											self.deployBusStopPopup(data, newMarker, cloneStop);
+											BusController.displayPopupBuses(data);
 										})
 								});
 
-								markerArray.push(newMarker);
-							})
-							_.forEach(markerArray, function(marker){
-								stopLayer.addLayer(marker);
+								stopLayer.addLayer(newMarker);
+								masterMarkerList.push({marker: newMarker, id: busPos.StopID});
 							})
 						});
 				} else {
 					stopLayer.clearLayers();
+					masterMarkerList = [];
 				}
 			},
 

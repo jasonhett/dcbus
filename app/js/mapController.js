@@ -1,4 +1,4 @@
-define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeController', 'utilities'], function(_, L, Q, Stops, Route, Util) {
+define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeController', 'utilities', 'busController'], function(_, L, Q, Stops, Route, Util, BusController) {
 		//return an object to define the "my/shirt" module.
 
 		var map,
@@ -15,6 +15,7 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeCo
 
 				//Create Map
 				map = L.map('map-container').setView([38.9238, -77.037], 15);
+				map.locate({setView: true, maxZoom: 18})
 
 				//Create layer for Basemap
 				//var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -25,6 +26,7 @@ define(["lib/lodash","lib/leaflet/leaflet", "lib/q", 'stopsController', 'routeCo
 
 				//Initialize Routes
 				Route.init(map);
+				BusController.init(map);
 
 			},
 

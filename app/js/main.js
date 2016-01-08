@@ -6,7 +6,7 @@ define(["mapController"], function(MapController) {
 		return {
 
 			//Initialize Application
-			init: function(){
+			init: function(){ 
 
 				//Initialize the Map
 				MapController.init();
